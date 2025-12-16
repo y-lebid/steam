@@ -66,7 +66,7 @@ def create_order(request):
 
         cart_items.delete()
 
-        messages.success(request, f"Замовлення #{order.id} створено ✅")
+        messages.success(request, f"Замовлення #{order.id} створено")
         return redirect('steam_core:product_list')
 
 
