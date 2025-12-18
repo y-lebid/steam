@@ -1,133 +1,206 @@
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Каталог товарів</title>
 
-<style>
-    body {
-        margin: 0;
-        padding: 20px;
-        background: #1b2838;
-        color: #c7d5e0;
-        font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-    }
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1b2838;
+            color: #c7d5e0;
+            font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+        }
 
-    h1 {
-        color: #66c0f4;
-        margin-bottom: 20px;
-    }
+        h1 {
+            color: #66c0f4;
+            margin-bottom: 20px;
+        }
 
-    a {
-        color: #66c0f4;
-        text-decoration: none;
-        font-weight: 500;
-    }
+        a {
+            color: #66c0f4;
+            text-decoration: none;
+            font-weight: 500;
+        }
 
-    a:hover {
-        color: #ffffff;
-    }
+        a:hover {
+            color: #ffffff;
+        }
 
-    .product-list {
-        list-style: none;
-        padding: 0;
-        margin: 0 auto;
-        max-width: 1300px;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 20px;
-    }
+        .product-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto;
+            max-width: 1300px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
 
-    .product-item {
-        background: linear-gradient(135deg, #2a475e, #1b2838);
-        border-radius: 6px;
-        padding: 12px;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+        .product-item {
+            background: linear-gradient(135deg, #2a475e, #1b2838);
+            border-radius: 6px;
+            padding: 12px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
 
-    .product-item:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 0 15px rgba(102, 192, 244, 0.4);
-    }
+        .product-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 15px rgba(102, 192, 244, 0.4);
+        }
 
-    .product-item img {
-        width: 100%;
-        height: 140px;
-        object-fit: cover;
-        border-radius: 4px;
-        margin-bottom: 10px;
-        background: #000;
-    }
+        .product-item img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background: #000;
+        }
 
-    .product-item h3 {
-        margin: 5px 0;
-        font-size: 18px;
-        color: #ffffff;
-    }
+        .product-item h3 {
+            margin: 5px 0;
+            font-size: 18px;
+            color: #ffffff;
+        }
 
-    .product-item p {
-        font-size: 14px;
-        color: #acb2b8;
-        margin: 4px 0;
-    }
+        .product-item p {
+            font-size: 14px;
+            color: #acb2b8;
+            margin: 4px 0;
+        }
 
-    .price {
-        font-size: 16px;
-        color: #a4d007;
-        font-weight: bold;
-        margin: 8px 0;
-    }
+        .price {
+            font-size: 16px;
+            color: #a4d007;
+            font-weight: bold;
+            margin: 8px 0;
+        }
 
-    form {
-        margin-top: 10px;
-    }
+        button {
+            width: 100%;
+            background: linear-gradient(to right, #75b022, #588a1b);
+            border: none;
+            border-radius: 3px;
+            padding: 8px 0;
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+        }
 
-    button {
-        width: 100%;
-        background: linear-gradient(to right, #75b022, #588a1b);
-        border: none;
-        border-radius: 3px;
-        padding: 8px 0;
-        color: #ffffff;
-        font-size: 14px;
-        cursor: pointer;
-        transition: background 0.2s ease;
-    }
+        button:hover {
+            background: linear-gradient(to right, #8ed629, #6aa621);
+        }
 
-    button:hover {
-        background: linear-gradient(to right, #8ed629, #6aa621);
-    }
-</style>
+        /* ===== MODAL ===== */
 
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: #1b2838;
+            width: 520px;
+            max-width: 92%;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 25px rgba(102, 192, 244, 0.45);
+        }
+
+        .modal h2 {
+            color: #66c0f4;
+            margin-top: 0;
+        }
+
+        .modal h4 {
+            margin: 15px 0 5px;
+            color: #a4d007;
+        }
+
+        .modal pre {
+            background: #16202d;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+
+        .close {
+            float: right;
+            font-size: 22px;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
 
     <h1>Каталог товарів</h1>
-
     <a href="{% url 'steam_core:cart_view' %}">Перейти до кошика</a>
 
     <ul class="product-list">
         {% for product in products %}
-            <li class="product-item">
-                {% if product.image %}
-                    <img src="{{ product.image }}" alt="{{ product.name }}">
-                {% endif %}
+        <li class="product-item" data-name="{{ product.name }}"
+            data-min="{{ product.min_requirements|default:'Не вказано' }}"
+            data-rec="{{ product.rec_requirements|default:'Не вказано' }}" onclick="openFromData(this)">
 
-                <h3>{{ product.name }}</h3>
-                <p>{{ product.price }} ₴</p>
-                <p>{{ product.description }}</p>
+            {% if product.image %}
+            <img src="{{ product.image }}" alt="{{ product.name }}">
+            {% endif %}
 
-                <form method="post" action="{% url 'steam_core:add_to_cart' product.id %}">
-                    {% csrf_token %}
-                    <button type="submit">Додати до кошика</button>
-                </form>
-            </li>
+            <h3>{{ product.name }}</h3>
+            <p class="price">{{ product.price }} ₴</p>
+            <p>{{ product.description }}</p>
+
+            <form method="post" action="{% url 'steam_core:add_to_cart' product.id %}"
+                onclick="event.stopPropagation();">
+                {% csrf_token %}
+                <button type="submit">Додати до кошика</button>
+            </form>
+        </li>
         {% empty %}
-            <p>Немає доступних товарів.</p>
+        <p>Немає доступних товарів.</p>
         {% endfor %}
     </ul>
 
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <span class="close" onclick="closeModal()">×</span>
+            <h2 id="modal-title"></h2>
+
+            <h4>Мінімальні системні вимоги</h4>
+            <pre id="modal-min"></pre>
+
+            <h4>Рекомендовані системні вимоги</h4>
+            <pre id="modal-rec"></pre>
+        </div>
+    </div>
+
+    <script>
+        function openFromData(el) {
+            document.getElementById("modal-title").innerText = el.dataset.name;
+            document.getElementById("modal-min").innerText = el.dataset.min;
+            document.getElementById("modal-rec").innerText = el.dataset.rec;
+            document.getElementById("modal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+    </script>
+
 </body>
+
 </html>

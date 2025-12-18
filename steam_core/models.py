@@ -8,7 +8,7 @@ class Product(models.Model):
         blank=True,
         verbose_name="Мінімальні системні вимоги"
     )
-    
+
     rec_requirements = models.TextField(
         blank=True,
         verbose_name="Рекомендовані системні вимоги"

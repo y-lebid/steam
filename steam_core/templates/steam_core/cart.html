@@ -4,46 +4,147 @@
 <head>
     <meta charset="UTF-8">
     <title>Кошик</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1b2838;
+            color: #c7d5e0;
+            font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+        }
+
+        h1 {
+            color: #66c0f4;
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: #66c0f4;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        a:hover {
+            color: #ffffff;
+        }
+
+        .cart-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #16202d;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+        }
+
+        thead {
+            background: #2a475e;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            color: #66c0f4;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px;
+            font-size: 14px;
+            border-top: 1px solid #1b2838;
+        }
+
+        tbody tr:hover {
+            background: rgba(102, 192, 244, 0.08);
+        }
+
+        .price {
+            color: #a4d007;
+            font-weight: bold;
+        }
+
+        .remove-btn {
+            background: linear-gradient(to right, #8b0000, #b22222);
+            border: none;
+            border-radius: 3px;
+            padding: 6px 12px;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .remove-btn:hover {
+            background: linear-gradient(to right, #b22222, #dc143c);
+        }
+
+        .total {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 18px;
+            color: #a4d007;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            font-size: 16px;
+            color: #acb2b8;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Ваш кошик</h1>
 
-    <a href="{% url 'steam_core:product_list' %}">← Повернутися до каталогу</a>
+    <div class="cart-container">
+        <h1>Ваш кошик</h1>
 
-    {% if cart_items %}
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Товар</th>
-                <th>Кількість</th>
-                <th>Ціна за од.</th>
-                <th>Разом</th>
-                <th>Дія</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in cart_items %}
-            <tr>
-                <td>{{ item.product.name }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ item.product.price }} ₴</td>
-                <td>{{ item.total_price }} ₴</td>
-                <td>
-                    <form method="post" action="{% url 'steam_core:remove_from_cart' item.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Видалити</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <a href="{% url 'steam_core:product_list' %}">← Повернутися до каталогу</a>
 
-    <h3>Загальна сума: {{ total }} ₴</h3>
-    {% else %}
-    <p>Кошик порожній</p>
-    {% endif %}
+        {% if cart_items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Кількість</th>
+                    <th>Ціна за од.</th>
+                    <th>Разом</th>
+                    <th>Дія</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td class="price">{{ item.product.price }} ₴</td>
+                    <td class="price">{{ item.total_price }} ₴</td>
+                    <td>
+                        <form method="post" action="{% url 'steam_core:remove_from_cart' item.id %}">
+                            {% csrf_token %}
+                            <button class="remove-btn" type="submit">Видалити</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="total">Загальна сума: {{ total }} ₴</div>
+        {% else %}
+        <p class="empty">Кошик порожній</p>
+        {% endif %}
+    </div>
+
 </body>
 
 </html>
