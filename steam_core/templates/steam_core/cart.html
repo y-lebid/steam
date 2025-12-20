@@ -3,19 +3,22 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кошик</title>
     <style>
         body {
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             background: #1b2838;
             color: #c7d5e0;
             font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+            line-height: 1.6;
         }
 
         h1 {
             color: #66c0f4;
             margin-bottom: 10px;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
         }
 
         a {
@@ -24,6 +27,7 @@
             font-weight: 500;
             display: inline-block;
             margin-bottom: 20px;
+            transition: color 0.2s;
         }
 
         a:hover {
@@ -39,9 +43,9 @@
             width: 100%;
             border-collapse: collapse;
             background: #16202d;
-            border-radius: 6px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         thead {
@@ -49,56 +53,182 @@
         }
 
         th {
-            padding: 12px;
+            padding: 15px 12px;
             text-align: left;
             color: #66c0f4;
             font-weight: 600;
             font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         td {
-            padding: 12px;
-            font-size: 14px;
+            padding: 15px 12px;
+            font-size: 15px;
             border-top: 1px solid #1b2838;
         }
 
         tbody tr:hover {
-            background: rgba(102, 192, 244, 0.08);
+            background: rgba(102, 192, 244, 0.05);
         }
 
         .price {
             color: #a4d007;
             font-weight: bold;
+            white-space: nowrap;
         }
 
         .remove-btn {
-            background: linear-gradient(to right, #8b0000, #b22222);
+            background: linear-gradient(to bottom, #a41b1b, #8b0000);
             border: none;
-            border-radius: 3px;
-            padding: 6px 12px;
+            border-radius: 4px;
+            padding: 8px 16px;
             color: #ffffff;
             cursor: pointer;
             font-size: 13px;
+            width: 100%;
+            max-width: 120px;
+            transition: opacity 0.2s;
         }
 
         .remove-btn:hover {
-            background: linear-gradient(to right, #b22222, #dc143c);
+            opacity: 0.9;
         }
 
         .total {
-            margin-top: 20px;
+            margin-top: 25px;
             text-align: right;
-            font-size: 18px;
+            font-size: 22px;
             color: #a4d007;
             font-weight: bold;
+            padding: 10px;
+            border-top: 2px solid #2a475e;
         }
 
         .empty {
             text-align: center;
-            font-size: 16px;
+            font-size: 18px;
             color: #acb2b8;
-            margin-top: 40px;
+            margin-top: 60px;
+            padding: 40px;
+            background: #16202d;
+            border-radius: 8px;
         }
+
+        @media screen and (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            thead tr {
+                display: none; 
+            }
+
+            tr {
+                margin-bottom: 15px;
+                border: 1px solid #2a475e;
+                border-radius: 8px;
+                background: #1b2838;
+                padding: 10px;
+            }
+
+            td {
+                border: none;
+                padding: 8px 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+            }
+
+            td::before {
+                content: attr(data-label);
+                float: left;
+                font-weight: 600;
+                color: #66c0f4;
+                margin-right: 15px;
+                text-align: left;
+            }
+
+            .remove-btn {
+                max-width: 100%;
+                margin-top: 10px;
+            }
+
+            .total {
+                text-align: center;
+                font-size: 20px;
+            }
+        }
+        /* ORDER FORM */
+        .order-box {
+            margin-top: 40px;
+            padding: 25px;
+            background: #16202d;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+        }
+
+        .order-box h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #66c0f4;
+            font-size: 22px;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #c7d5e0;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 4px;
+            border: 1px solid #2a475e;
+            background: #1b2838;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .field input:focus {
+            outline: none;
+            border-color: #66c0f4;
+        }
+
+        .separator {
+            text-align: center;
+            margin: 10px 0;
+            color: #acb2b8;
+            font-size: 13px;
+        }
+
+        .order-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: linear-gradient(to bottom, #66c0f4, #417a9b);
+            border: none;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .order-btn:hover {
+            opacity: 0.95;
+        }
+        .cart-container {
+                max-width: 1000px;
+                margin: 0 auto;
+            }
     </style>
 </head>
 
@@ -123,12 +253,12 @@
             <tbody>
                 {% for item in cart_items %}
                 <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td class="price">{{ item.product.price }} ₴</td>
-                    <td class="price">{{ item.total_price }} ₴</td>
-                    <td>
-                        <form method="post" action="{% url 'steam_core:remove_from_cart' item.id %}">
+                    <td data-label="Товар">{{ item.product.name }}</td>
+                    <td data-label="Кількість">{{ item.quantity }}</td>
+                    <td data-label="Ціна за од." class="price">{{ item.product.price }} ₴</td>
+                    <td data-label="Разом" class="price">{{ item.total_price }} ₴</td>
+                    <td data-label="Дія">
+                        <form method="post" action="{% url 'steam_core:remove_from_cart' item.id %}" style="margin: 0; width: 100%;">
                             {% csrf_token %}
                             <button class="remove-btn" type="submit">Видалити</button>
                         </form>
@@ -140,10 +270,36 @@
 
         <div class="total">Загальна сума: {{ total }} ₴</div>
         {% else %}
-        <p class="empty">Кошик порожній</p>
+        <div class="empty">Ваш кошик поки що порожній</div>
         {% endif %}
     </div>
 
-</body>
+<div class="cart-container">
+    {% if cart_items %}
+    <div class="order-box">
+        <h2>Оформлення замовлення</h2>
 
+        <form method="post" action="{% url 'steam_core:create_order' %}">
+            {% csrf_token %}
+
+            <div class="field">
+                <label>Номер телефону</label>
+                <input type="text" name="phone" placeholder="+380..." />
+            </div>
+
+            <div class="separator">або</div>
+
+            <div class="field">
+                <label>Email</label>
+                <input type="email" name="email" placeholder="example@gmail.com" />
+            </div>
+
+            <button type="submit" class="order-btn">
+                Оформити замовлення
+            </button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+</body>
 </html>

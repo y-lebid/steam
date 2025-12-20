@@ -58,7 +58,7 @@ def create_order(request):
             messages.error(request, "Введи телефон або email")
             return redirect('steam_core:cart_view')
 
-        order = Order.objects.create(
+        Order.objects.create(
             session_key=session_key,
             phone=phone,
             email=email
@@ -66,7 +66,7 @@ def create_order(request):
 
         cart_items.delete()
 
-        messages.success(request, f"Замовлення #{order.id} створено")
+        messages.success(request, "Замовлення оформлено!")
         return redirect('steam_core:product_list')
 
 
