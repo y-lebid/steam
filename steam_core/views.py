@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Product, CartItem, Order
+from .models import Product, CartItem, Order, OrderItem
+
 
 
 def _get_session_key(request):
@@ -57,13 +58,19 @@ def create_order(request):
         if not phone and not email:
             messages.error(request, "Введи телефон або email")
             return redirect('steam_core:cart_view')
-
-        Order.objects.create(
+        order = Order.objects.create(
             session_key=session_key,
             phone=phone,
             email=email
         )
 
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity,
+                price=item.product.price
+            )
         cart_items.delete()
 
         messages.success(request, "Замовлення оформлено!")
