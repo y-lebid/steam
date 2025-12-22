@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог товарів</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 15px;
+            background: #1b2838;
+            color: #c7d5e0;
+            font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        h1 {
+            color: #66c0f4;
+            margin-bottom: 20px;
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            text-align: center;
+        }
+
+        .header-nav {
+            max-width: 1300px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        a {
+            color: #66c0f4;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #ffffff;
+        }
+
+        .product-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto;
+            max-width: 1300px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .product-item {
+            background: linear-gradient(135deg, #2a475e, #1b2838);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .product-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(102, 192, 244, 0.3);
+        }
+
+        .product-item img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            background: #000;
+        }
+
+        .product-item h3 {
+            margin: 5px 0;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .product-item p {
+            font-size: 14px;
+            color: #acb2b8;
+            margin: 8px 0;
+            flex-grow: 1;
+        }
+
+        .price {
+            font-size: 18px;
+            color: #a4d007;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(to bottom, #75b022, #588a1b);
+            border: none;
+            border-radius: 4px;
+            padding: 10px 0;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: filter 0.2s;
+        }
+
+        button:hover {
+            filter: brightness(1.1);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 10px;
+        }
+
+        .modal {
+            background: #1b2838;
+            width: 600px;
+            max-width: 100%;
+            max-height: 90vh;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(102, 192, 244, 0.4);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal h2 {
+            color: #66c0f4;
+            margin-top: 0;
+            padding-right: 30px;
+        }
+
+        .modal h4 {
+            margin: 20px 0 10px;
+            color: #a4d007;
+            font-size: 16px;
+        }
+
+        .modal pre {
+            background: #16202d;
+            padding: 12px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            font-family: inherit;
+            font-size: 13px;
+            border: 1px solid #2a475e;
+            color: #d1d1d1;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            color: #acb2b8;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .product-list {
+                grid-template-columns: 1fr;
+            }
+            .modal {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header-nav">
+        <h1>Каталог</h1>
+        <a href="{% url 'steam_core:cart_view' %}">Кошик</a>
+    </div>
+
+    <ul class="product-list">
+        {% for product in products %}
+        <li class="product-item" 
+            data-name="{{ product.name }}"
+            data-min="{{ product.min_requirements|default:'Не вказано' }}"
+            data-rec="{{ product.rec_requirements|default:'Не вказано' }}" 
+            onclick="openFromData(this)">
+
+            {% if product.image %}
+            <img src="{{ product.image }}" alt="{{ product.name }}">
+            {% else %}
+            <div style="width:100%; height:160px; background:#16202d; border-radius:4px; margin-bottom:12px;"></div>
+            {% endif %}
+
+            <h3>{{ product.name }}</h3>
+            <p class="price">{{ product.price }} ₴</p>
+            <p>{{ product.description|truncatechars:100 }}</p>
+
+            <form method="post" action="{% url 'steam_core:add_to_cart' product.id %}"
+                onclick="event.stopPropagation();">
+                {% csrf_token %}
+                <button type="submit">Додати до кошика</button>
+            </form>
+        </li>
+        {% empty %}
+        <li style="grid-column: 1/-1; text-align: center; padding: 40px;">
+            <p>Немає доступних товарів у каталозі.</p>
+        </li>
+        {% endfor %}
+    </ul>
+    
+    <div class="modal-overlay" id="modal" onclick="if(event.target === this) closeModal()">
+        <div class="modal">
+            <span class="close" onclick="closeModal()">×</span>
+            <h2 id="modal-title"></h2>
+
+            <h4>Мінімальні системні вимоги</h4>
+            <pre id="modal-min"></pre>
+
+            <h4>Рекомендовані системні вимоги</h4>
+            <pre id="modal-rec"></pre>
+        </div>
+    </div>
+
+    <script>
+        function openFromData(el) {
+            document.getElementById("modal-title").innerText = el.dataset.name;
+            document.getElementById("modal-min").innerText = el.dataset.min;
+            document.getElementById("modal-rec").innerText = el.dataset.rec;
+            document.getElementById("modal").style.display = "flex";
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+    </script>
+
+</body>
+
+</html>
