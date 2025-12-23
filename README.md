@@ -86,5 +86,5 @@ python manage.py createsuperuser
 
 ### 6️⃣ Запуск сервера
 ```bash
-python manage.py runserverz
+python manage.py runserver
 ```
